@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5C7F095627C58C9600E12A65 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C7F095527C58C9600E12A65 /* main.swift */; };
+		5C7F095E27C58CD600E12A65 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 5C7F095D27C58CD600E12A65 /* ArgumentParser */; };
+		5C81365027C7D87C006625B9 /* EdmParser in Frameworks */ = {isa = PBXBuildFile; productRef = 5C81364F27C7D87C006625B9 /* EdmParser */; };
+		5CC1D0CC27C699E3009298F1 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CC1D0CB27C699E3009298F1 /* main.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,8 +25,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		5C7F095227C58C9600E12A65 /* EdmCli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = EdmCli; sourceTree = BUILT_PRODUCTS_DIR; };
-		5C7F095527C58C9600E12A65 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		5C81365227C83478006625B9 /* EdmParser */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = EdmParser; path = EdmCli/EdmParser; sourceTree = "<group>"; };
+		5C81365327C83488006625B9 /* EdmParser */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = EdmParser; sourceTree = "<group>"; };
+		5CC1D0CA27C699E2009298F1 /* EdmCli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = EdmCli; sourceTree = BUILT_PRODUCTS_DIR; };
+		5CC1D0CB27C699E3009298F1 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = main.swift; path = EdmCli/main.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +36,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5C81365027C7D87C006625B9 /* EdmParser in Frameworks */,
+				5C7F095E27C58CD600E12A65 /* ArgumentParser in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,25 +47,19 @@
 		5C7F094927C58C9600E12A65 = {
 			isa = PBXGroup;
 			children = (
-				5C7F095427C58C9600E12A65 /* EdmCli */,
-				5C7F095327C58C9600E12A65 /* Products */,
+				5C81365127C83478006625B9 /* Packages */,
+				5CC1D0CA27C699E2009298F1 /* EdmCli */,
+				5C81365327C83488006625B9 /* EdmParser */,
+				5CC1D0CB27C699E3009298F1 /* main.swift */,
 			);
 			sourceTree = "<group>";
 		};
-		5C7F095327C58C9600E12A65 /* Products */ = {
+		5C81365127C83478006625B9 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				5C7F095227C58C9600E12A65 /* EdmCli */,
+				5C81365227C83478006625B9 /* EdmParser */,
 			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		5C7F095427C58C9600E12A65 /* EdmCli */ = {
-			isa = PBXGroup;
-			children = (
-				5C7F095527C58C9600E12A65 /* main.swift */,
-			);
-			path = EdmCli;
+			name = Packages;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -78,8 +78,12 @@
 			dependencies = (
 			);
 			name = EdmCli;
+			packageProductDependencies = (
+				5C7F095D27C58CD600E12A65 /* ArgumentParser */,
+				5C81364F27C7D87C006625B9 /* EdmParser */,
+			);
 			productName = EdmCli;
-			productReference = 5C7F095227C58C9600E12A65 /* EdmCli */;
+			productReference = 5CC1D0CA27C699E2009298F1 /* EdmCli */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -94,6 +98,7 @@
 				TargetAttributes = {
 					5C7F095127C58C9600E12A65 = {
 						CreatedOnToolsVersion = 13.2.1;
+						LastSwiftMigration = 1320;
 					};
 				};
 			};
@@ -106,7 +111,11 @@
 				Base,
 			);
 			mainGroup = 5C7F094927C58C9600E12A65;
-			productRefGroup = 5C7F095327C58C9600E12A65 /* Products */;
+			packageReferences = (
+				5C7F095C27C58CD600E12A65 /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
+				5C81364E27C7D87C006625B9 /* XCRemoteSwiftPackageReference "EdmParser" */,
+			);
+			productRefGroup = 5C7F094927C58C9600E12A65;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -120,7 +129,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5C7F095627C58C9600E12A65 /* main.swift in Sources */,
+				5CC1D0CC27C699E3009298F1 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -245,10 +254,17 @@
 		5C7F095A27C58C9600E12A65 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = DFS67V5723;
 				ENABLE_HARDENED_RUNTIME = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -256,9 +272,15 @@
 		5C7F095B27C58C9600E12A65 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = DFS67V5723;
 				ENABLE_HARDENED_RUNTIME = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -286,6 +308,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5C7F095C27C58CD600E12A65 /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-argument-parser.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		5C81364E27C7D87C006625B9 /* XCRemoteSwiftPackageReference "EdmParser" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/staski/EdmParser.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5C7F095D27C58CD600E12A65 /* ArgumentParser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5C7F095C27C58CD600E12A65 /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
+			productName = ArgumentParser;
+		};
+		5C81364F27C7D87C006625B9 /* EdmParser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5C81364E27C7D87C006625B9 /* XCRemoteSwiftPackageReference "EdmParser" */;
+			productName = EdmParser;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5C7F094A27C58C9600E12A65 /* Project object */;
 }
