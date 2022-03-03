@@ -25,7 +25,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		5C81365227C83478006625B9 /* EdmParser */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = EdmParser; path = EdmCli/EdmParser; sourceTree = "<group>"; };
 		5C81365327C83488006625B9 /* EdmParser */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = EdmParser; sourceTree = "<group>"; };
 		5CC1D0CA27C699E2009298F1 /* EdmCli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = EdmCli; sourceTree = BUILT_PRODUCTS_DIR; };
 		5CC1D0CB27C699E3009298F1 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = main.swift; path = EdmCli/main.swift; sourceTree = "<group>"; };
@@ -57,7 +56,6 @@
 		5C81365127C83478006625B9 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				5C81365227C83478006625B9 /* EdmParser */,
 			);
 			name = Packages;
 			sourceTree = "<group>";

@@ -76,10 +76,37 @@ struct EdmCli : ParsableCommand {
             }
         }
         else {
-            try! printFlightSummary(fp: edmFileParser, flightId: flightId!)
+            if (long == false) {
+                try! printFlightSummary(fp: edmFileParser, flightId: flightId!)
+            } else {
+                dumpFlight(for: flightId!, fp: edmFileParser)
+            }
         }
      }
-    
+
+    func dumpFlight (for id : Int, fp: EdmFileParser) {
+        let encoder = JSONEncoder()
+        let formatter = DateFormatter()
+
+        formatter.dateStyle = .short
+        formatter.timeStyle = .medium
+        encoder.dateEncodingStrategy = .formatted(formatter)
+        encoder.outputFormatting = .prettyPrinted
+
+        guard let fd = fp.edmFileData.getFlight(for: id) else {
+            trc(level: .error, string: "dumpFlight: no flight for id \(id)")
+            return
+        }
+        
+        do {
+            let data = try encoder.encode(fd)
+            let s = String(data: data, encoding: .utf8)
+            print (s!)
+        } catch {
+            print ("error: \(error)")
+        }
+    }
+
     func dumpAll (fp: EdmFileParser) {
         let encoder = JSONEncoder()
         let formatter = DateFormatter()
@@ -102,7 +129,16 @@ struct EdmCli : ParsableCommand {
         guard let fh = fp.edmFileData.edmFileHeader else {
             throw ValidationError("invalid header file")
         }
-        print (fh.stringValue(includeFlights: true))
+        print (fh.stringValue(includeFlights: false))
+        for i in 0..<fh.flightInfos.count {
+            guard let h = fp.edmFileData.edmFlightData[i].flightHeader else {
+                throw "invalid flight data at index \(i)"
+            }
+            
+            let s = h.stringValue() + ", duration: " + fp.edmFileData.edmFlightData[i].duration.hms() +
+            ", fuel used: " + String(format: "%3d", fp.edmFileData.edmFlightData[i].fuelUsed) + " l"
+            print(s)
+        }
     }
     
     func printFlightSummary (fp: EdmFileParser, flightId: Int) throws {
@@ -131,6 +167,8 @@ struct EdmCli : ParsableCommand {
             
     }
 }
+
+extension String : Error {}
 
 EdmCli.main()
 
