@@ -249,6 +249,22 @@ struct EdmCli : ParsableCommand {
             return res.append("Oil temperature below \(warn)F after " + d.hms() + " for \(duration) seconds \n")
         })
 
+        guard let oilhighintervals = fd!.getOilHighIntervals() else {
+            throw ValidationError("unable to retrieve oil high warn intervals")
+        }
+        
+        s = oilhighintervals.reduce(into: s, { (res, elem) in
+            let (idx, duration, warn) = (elem.0, elem.1, elem.2)
+            let fr = fd!.flightDataBody[idx]
+            guard let t = fr.date else {
+                trc(level: .error, string: "FlightDataRecord.stringValue(): no date set")
+                return
+            }
+            
+            let d = t.timeIntervalSince(start)
+            return res.append("Oil temperature exceeded \(warn)F after " + d.hms() + " for \(duration) seconds \n")
+        })
+
         guard let coldwarnintervals = fd!.getColdWarnIntervals() else {
             throw ValidationError("unable to retrieve cold warn intervals")
         }
@@ -265,6 +281,7 @@ struct EdmCli : ParsableCommand {
             return res.append("COLD warning above \(warn)F after " + d.hms() + " for \(duration) seconds \n")
         })
         
+        /*
         guard let cwarn = fd!.getChtWarnCount() else {
             throw ValidationError("unable to retrieve CHT warn count")
         }
@@ -281,7 +298,6 @@ struct EdmCli : ParsableCommand {
             return res.append("CHT(\(idx)) of \(max)F exceeded on \(cylCount) cylinders after " + d.hms() + "\n")
         }
 
-
         guard let oillowwarn = fd!.getOilLowCount() else {
             throw ValidationError("unable to retrieve oil low warn count")
         }
@@ -297,6 +313,24 @@ struct EdmCli : ParsableCommand {
             let d = t.timeIntervalSince(start)
             return res.append("Oil temperature low \(oiltemp)F after " + d.hms() + "\n")
         })
+         */
+        
+        guard let oilhighwarn = fd!.getOilHighCount() else {
+            throw ValidationError("unable to retrieve oil high warn count")
+        }
+
+        s = oilhighwarn.reduce(into: s, { (res, elem) in
+            let (idx, oiltemp) = (elem.0, elem.1)
+            let fr = fd!.flightDataBody[idx]
+            guard let t = fr.date else {
+                trc(level: .error, string: "FlightDataRecord.stringValue(): no date set")
+                return
+            }
+            
+            let d = t.timeIntervalSince(start)
+            return res.append("Oil temperature exceeded \(oiltemp)F after " + d.hms() + "\n")
+        })
+        
         print (s)
     }
 }
