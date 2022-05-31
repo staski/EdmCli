@@ -25,7 +25,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		5C81365327C83488006625B9 /* EdmParser */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = EdmParser; sourceTree = "<group>"; };
+		5C75CD3528412D8300330420 /* EdmParser */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = EdmParser; sourceTree = "<group>"; };
 		5CC1D0CA27C699E2009298F1 /* EdmCli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = EdmCli; sourceTree = BUILT_PRODUCTS_DIR; };
 		5CC1D0CB27C699E3009298F1 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = main.swift; path = EdmCli/main.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -43,21 +43,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5C75CD3428412D8300330420 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				5C75CD3528412D8300330420 /* EdmParser */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
 		5C7F094927C58C9600E12A65 = {
 			isa = PBXGroup;
 			children = (
-				5C81365127C83478006625B9 /* Packages */,
+				5C75CD3428412D8300330420 /* Packages */,
 				5CC1D0CA27C699E2009298F1 /* EdmCli */,
-				5C81365327C83488006625B9 /* EdmParser */,
 				5CC1D0CB27C699E3009298F1 /* main.swift */,
 			);
-			sourceTree = "<group>";
-		};
-		5C81365127C83478006625B9 /* Packages */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Packages;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -92,7 +92,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1320;
-				LastUpgradeCheck = 1320;
+				LastUpgradeCheck = 1330;
 				TargetAttributes = {
 					5C7F095127C58C9600E12A65 = {
 						CreatedOnToolsVersion = 13.2.1;
@@ -253,6 +253,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = DFS67V5723;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -271,6 +272,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = DFS67V5723;
 				ENABLE_HARDENED_RUNTIME = YES;
