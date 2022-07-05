@@ -17,9 +17,14 @@ struct EdmCli : ParsableCommand {
         case verbose
     }
     
+    enum FuelUnit : String, ExpressibleByArgument {
+            case lph, gph
+    }
+    
     @Argument(help: "EDM data file") var path: String
     @Option(name: [.customShort("i"),.customLong("id"), .customLong("flighId")], help: "The flight id") var flightId : Int?
     @Option(name: [.customShort("v"),.customLong("verbosity")], help: "verbosity level") var verbose : Int?
+    @Option(name: [.customShort("u"),.customLong("fuelunit"), .customLong("fu")], help: "fuel unit [lph | gph]") var fuelunit : FuelUnit?
     @Flag(name: .shortAndLong, help: "print a summary only") var short = false
     @Flag(name: .shortAndLong, help: "print a summary only") var long = false
     
@@ -81,7 +86,7 @@ struct EdmCli : ParsableCommand {
             } else if long == true {
                 dumpFlight(for: flightId!, fp: edmFileParser)
             } else {
-                try! printFlightInformation(fp: edmFileParser, flightId: flightId!)
+                try! printFlightInformation(fp: edmFileParser, flightId: flightId!, ffUnit: fuelunit)
             }
         }
      }
@@ -172,10 +177,10 @@ struct EdmCli : ParsableCommand {
             
     }
     
-    func printFlightInformation (fp: EdmFileParser, flightId: Int) throws {
+    func printFlightInformation (fp: EdmFileParser, flightId: Int, ffUnit : FuelUnit?) throws {
         var fd : EdmFlightData?
         var start : Date = Date()
-        var max : Int = 0
+        //var max : Int = 0
         
         for f in fp.edmFileData.edmFlightData {
             guard let fh = f.flightHeader else {
@@ -185,16 +190,26 @@ struct EdmCli : ParsableCommand {
             if fh.id == flightId {
                 fd = f
                 start = fh.date!
-                max = fh.alarmLimits.cht
+                //max = fh.alarmLimits.cht
                 break
             }
+        }
+        
+        var ff_out_unit : FuelFlowUnit?
+        switch ffUnit {
+        case .lph:
+            ff_out_unit = .LPH
+        case .gph:
+            ff_out_unit = .GPH
+        default:
+            ff_out_unit = nil
         }
         
         guard fd != nil else {
             throw ValidationError("no flight found with id \(flightId)")
         }
         
-        guard var s = fd!.stringValue() else {
+        guard var s = fd!.stringValue(ff_out_unit: ff_out_unit) else {
             throw ValidationError("not able to extract string value")
         }
 
