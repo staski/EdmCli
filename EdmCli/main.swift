@@ -82,7 +82,7 @@ struct EdmCli : ParsableCommand {
         }
         else {
             if  short == true {
-                try! printFlightSummary(fp: edmFileParser, flightId: flightId!)
+                try! printFlightSummary(fp: edmFileParser, flightId: flightId!, ffUnit: fuelunit)
             } else if long == true {
                 dumpFlight(for: flightId!, fp: edmFileParser)
             } else {
@@ -137,21 +137,34 @@ struct EdmCli : ParsableCommand {
             throw ValidationError("invalid header file")
         }
         
+        var ff_out_unit : FuelFlowUnit?
+        switch fuelunit {
+        case .lph:
+            ff_out_unit = .LPH
+        case .gph:
+            ff_out_unit = .GPH
+        default:
+            ff_out_unit = fh.ff.getUnit()
+        }
+        
         print (fh.stringValue(includeFlights: false))
         for i in 0..<fh.flightInfos.count {
             guard let h = fp.edmFileData.edmFlightData[i].flightHeader else {
                 throw "invalid flight data at index \(i)"
             }
             
-            var s = h.stringValue() + ", duration: " + fp.edmFileData.edmFlightData[i].duration.hms() +
-            ", fuel used: " + String(format: "%3d", fp.edmFileData.edmFlightData[i].fuelUsed) + " l"
-            let newUsed = fp.edmFileData.edmFlightData[i].getFuelUsed()
-            s.append(", (\(newUsed))")
+            var s = h.stringValue() + ", duration: " + fp.edmFileData.edmFlightData[i].duration.hms()
+            let newUsed = String(format: "%6.1f  %@", fp.edmFileData.edmFlightData[i].getFuelUsed(outFuelUnit: ff_out_unit), ff_out_unit?.volumename ?? "")
+            
+            s.append(", fuel used: \(newUsed),")
+            
+            let recordCount = fp.edmFileData.edmFlightData[i].flightDataBody.count
+            s.append(" \(recordCount) data records")
             print(s)
         }
     }
     
-    func printFlightSummary (fp: EdmFileParser, flightId: Int) throws {
+    func printFlightSummary (fp: EdmFileParser, flightId: Int, ffUnit : FuelUnit?) throws {
         var fd : EdmFlightData?
         
         for f in fp.edmFileData.edmFlightData {
@@ -165,11 +178,21 @@ struct EdmCli : ParsableCommand {
             }
         }
         
+        var ff_out_unit : FuelFlowUnit?
+        switch ffUnit {
+        case .lph:
+            ff_out_unit = .LPH
+        case .gph:
+            ff_out_unit = .GPH
+        default:
+            ff_out_unit = nil
+        }
+        
         guard fd != nil else {
             throw ValidationError("no flight found with id \(flightId)")
         }
         
-        guard let s = fd!.stringSummary() else {
+        guard let s = fd!.stringSummary(ff_out_unit: ff_out_unit) else {
             throw ValidationError("not able to extract string value")
         }
         
