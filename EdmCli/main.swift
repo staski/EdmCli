@@ -84,7 +84,7 @@ struct EdmCli : ParsableCommand {
             if  short == true {
                 try! printFlightSummary(fp: edmFileParser, flightId: flightId!, ffUnit: fuelunit)
             } else if long == true {
-                dumpFlight(for: flightId!, fp: edmFileParser)
+                try! printFlightInformationLong(fp: edmFileParser, flightId: flightId!, ffUnit: fuelunit)
             } else {
                 try! printFlightInformation(fp: edmFileParser, flightId: flightId!, ffUnit: fuelunit)
             }
@@ -201,6 +201,128 @@ struct EdmCli : ParsableCommand {
     }
     
     func printFlightInformation (fp: EdmFileParser, flightId: Int, ffUnit : FuelUnit?) throws {
+        var fd : EdmFlightData?
+        var start : Date = Date()
+        //var max : Int = 0
+        
+        for f in fp.edmFileData.edmFlightData {
+            guard let fh = f.flightHeader else {
+                throw ValidationError("invalid header")
+            }
+            
+            if fh.id == flightId {
+                fd = f
+                start = fh.date!
+                //max = fh.alarmLimits.cht
+                break
+            }
+        }
+        
+        var ff_out_unit : FuelFlowUnit?
+        switch ffUnit {
+        case .lph:
+            ff_out_unit = .LPH
+        case .gph:
+            ff_out_unit = .GPH
+        default:
+            ff_out_unit = nil
+        }
+        
+        guard fd != nil else {
+            throw ValidationError("no flight found with id \(flightId)")
+        }
+        
+        guard var s = fd!.stringValue(ff_out_unit: ff_out_unit) else {
+            throw ValidationError("not able to extract string value")
+        }
+
+        s.append("\n")
+
+        guard let chtwarnintervals = fd!.getChtWarnIntervals() else {
+            throw ValidationError("unable to retrieve cht warn intervals")
+        }
+        
+        s = chtwarnintervals.reduce(into: s, { (res, elem) in
+            let (idx, duration, warn) = (elem.0, elem.1, elem.2)
+            let fr = fd!.flightDataBody[idx]
+            guard let t = fr.date else {
+                trc(level: .error, string: "FlightDataRecord.stringValue(): no date set")
+                return
+            }
+            
+            let d = t.timeIntervalSince(start)
+            return res.append("CHT warning above \(warn)F after " + d.hms() + " for \(duration) seconds \n")
+        })
+
+        guard let oillowintervals = fd!.getOilLowIntervals() else {
+            throw ValidationError("unable to retrieve oil low warn intervals")
+        }
+        
+        s = oillowintervals.reduce(into: s, { (res, elem) in
+            let (idx, duration, warn) = (elem.0, elem.1, elem.2)
+            let fr = fd!.flightDataBody[idx]
+            guard let t = fr.date else {
+                trc(level: .error, string: "FlightDataRecord.stringValue(): no date set")
+                return
+            }
+            
+            let d = t.timeIntervalSince(start)
+            return res.append("Oil temperature below \(warn)F after " + d.hms() + " for \(duration) seconds \n")
+        })
+
+        guard let oilhighintervals = fd!.getOilHighIntervals() else {
+            throw ValidationError("unable to retrieve oil high warn intervals")
+        }
+        
+        s = oilhighintervals.reduce(into: s, { (res, elem) in
+            let (idx, duration, warn) = (elem.0, elem.1, elem.2)
+            let fr = fd!.flightDataBody[idx]
+            guard let t = fr.date else {
+                trc(level: .error, string: "FlightDataRecord.stringValue(): no date set")
+                return
+            }
+            
+            let d = t.timeIntervalSince(start)
+            return res.append("Oil temperature exceeded \(warn)F after " + d.hms() + " for \(duration) seconds \n")
+        })
+
+        guard let coldwarnintervals = fd!.getColdWarnIntervals() else {
+            throw ValidationError("unable to retrieve cold warn intervals")
+        }
+        
+        s = coldwarnintervals.reduce(into: s, { (res, elem) in
+            let (idx, duration, warn) = (elem.0, elem.1, elem.2)
+            let fr = fd!.flightDataBody[idx]
+            guard let t = fr.date else {
+                trc(level: .error, string: "FlightDataRecord.stringValue(): no date set")
+                return
+            }
+            
+            let d = t.timeIntervalSince(start)
+            return res.append("COLD warning above \(warn)F after " + d.hms() + " for \(duration) seconds \n")
+        })
+        
+        
+        guard let oilhighwarn = fd!.getOilHighCount() else {
+            throw ValidationError("unable to retrieve oil high warn count")
+        }
+
+        s = oilhighwarn.reduce(into: s, { (res, elem) in
+            let (idx, oiltemp) = (elem.0, elem.1)
+            let fr = fd!.flightDataBody[idx]
+            guard let t = fr.date else {
+                trc(level: .error, string: "FlightDataRecord.stringValue(): no date set")
+                return
+            }
+            
+            let d = t.timeIntervalSince(start)
+            return res.append("Oil temperature exceeded \(oiltemp)F after " + d.hms() + "\n")
+        })
+        
+        print (s)
+    }
+
+    func printFlightInformationLong (fp: EdmFileParser, flightId: Int, ffUnit : FuelUnit?) throws {
         var fd : EdmFlightData?
         var start : Date = Date()
         //var max : Int = 0
