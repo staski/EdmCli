@@ -9,6 +9,9 @@ import Foundation
 import ArgumentParser
 import EdmParser
 
+enum EdmCliError : Error {
+    case invalidFlightId
+}
 struct EdmCli : ParsableCommand {
     
     enum VerbosityLevel : Int, CaseIterable {
@@ -81,12 +84,17 @@ struct EdmCli : ParsableCommand {
             }
         }
         else {
-            if  short == true {
-                try! printFlightSummary(fp: edmFileParser, flightId: flightId!, ffUnit: fuelunit)
-            } else if long == true {
-                try! printFlightInformationLong(fp: edmFileParser, flightId: flightId!, ffUnit: fuelunit)
-            } else {
-                try! printFlightInformation(fp: edmFileParser, flightId: flightId!, ffUnit: fuelunit)
+            do {
+                if  short == true {
+                    try printFlightSummary(fp: edmFileParser, flightId: flightId!, ffUnit: fuelunit)
+                } else if long == true {
+                    try printFlightInformationLong(fp: edmFileParser, flightId: flightId!, ffUnit: fuelunit)
+                } else {
+                    try printFlightInformation(fp: edmFileParser, flightId: flightId!, ffUnit: fuelunit)
+                }
+            } catch EdmCliError.invalidFlightId {
+                print ("flight id \(flightId!) not found")
+                try! printFileHeader(fp: edmFileParser)
             }
         }
      }
@@ -189,7 +197,8 @@ struct EdmCli : ParsableCommand {
         }
         
         guard fd != nil else {
-            throw ValidationError("no flight found with id \(flightId)")
+            throw EdmCliError.invalidFlightId
+            //throw ValidationError("no flight found with id \(flightId)")
         }
         
         guard let s = fd!.stringSummary(ff_out_unit: ff_out_unit) else {
@@ -229,7 +238,8 @@ struct EdmCli : ParsableCommand {
         }
         
         guard fd != nil else {
-            throw ValidationError("no flight found with id \(flightId)")
+            throw EdmCliError.invalidFlightId
+            //throw ValidationError("no flight found with id \(flightId)")
         }
         
         guard var s = fd!.stringValue(ff_out_unit: ff_out_unit) else {
@@ -351,7 +361,8 @@ struct EdmCli : ParsableCommand {
         }
         
         guard fd != nil else {
-            throw ValidationError("no flight found with id \(flightId)")
+            throw EdmCliError.invalidFlightId
+            //throw ValidationError("no flight found with id \(flightId)")
         }
         
         guard var s = fd!.stringValue(ff_out_unit: ff_out_unit) else {
