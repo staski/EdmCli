@@ -277,7 +277,7 @@ struct EdmCli : ParsableCommand {
             }
             
             let d = t.timeIntervalSince(start)
-            return res.append("Oil temperature below \(warn)F after " + d.hms() + " for \(duration) seconds \n")
+            return res.append("Oil temperature below \(warn)°F after " + d.hms() + " for \(duration) seconds \n")
         })
 
         guard let oilhighintervals = fd!.getOilHighIntervals() else {
@@ -293,7 +293,7 @@ struct EdmCli : ParsableCommand {
             }
             
             let d = t.timeIntervalSince(start)
-            return res.append("Oil temperature exceeded \(warn)F after " + d.hms() + " for \(duration) seconds \n")
+            return res.append("Oil temperature exceeded \(warn)°F after " + d.hms() + " for \(duration) seconds \n")
         })
 
         guard let coldwarnintervals = fd!.getColdWarnIntervals() else {
@@ -309,7 +309,7 @@ struct EdmCli : ParsableCommand {
             }
             
             let d = t.timeIntervalSince(start)
-            return res.append("COLD warning above \(warn)F after " + d.hms() + " for \(duration) seconds \n")
+            return res.append("Cooling rate below \(warn)°F/min after " + d.hms() + " for \(duration) seconds \n")
         })
         
         
