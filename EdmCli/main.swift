@@ -312,7 +312,22 @@ struct EdmCli : ParsableCommand {
             return res.append("Cooling rate below \(warn)°F/min after " + d.hms() + " for \(duration) seconds \n")
         })
         
+        guard let diffwarnintervals = fd!.getDiffWarnIntervals() else {
+            throw ValidationError("unable to retrieve diff warn intervals")
+        }
         
+        s = diffwarnintervals.reduce(into: s, { (res, elem) in
+            let (idx, duration, warn) = (elem.0, elem.1, elem.2)
+            let fr = fd!.flightDataBody[idx]
+            guard let t = fr.date else {
+                trc(level: .error, string: "FlightDataRecord.stringValue(): no date set")
+                return
+            }
+            
+            let d = t.timeIntervalSince(start)
+            return res.append("EGT Spread above \(warn)°F after " + d.hms() + " for \(duration) seconds \n")
+        })
+
         guard let oilhighwarn = fd!.getOilHighCount() else {
             throw ValidationError("unable to retrieve oil high warn count")
         }
