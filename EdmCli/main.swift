@@ -156,7 +156,7 @@ struct EdmCli : ParsableCommand {
         }
         
         print (fh.stringValue(includeFlights: false))
-        for i in 0..<fh.flightInfos.count {
+        for i in 0..<fp.edmFileData.edmFlightData.count {
             guard let h = fp.edmFileData.edmFlightData[i].flightHeader else {
                 throw "invalid flight data at index \(i)"
             }
