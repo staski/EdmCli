@@ -344,6 +344,18 @@ struct EdmCli : ParsableCommand {
             return res.append("Oil temperature exceeded \(oiltemp)F after " + d.hms() + "\n")
         })
         
+        let naintervals = fd!.getNAIntervals()
+
+        for elem in naintervals {
+            let str = elem.key
+            for i in 0 ..< elem.value.count / 2 {
+                let d1 = fd!.flightDataBody[elem.value[2*i]].date?.toString(dateFormat: "HH:mm") ?? "invalid"
+                let d2 = fd!.flightDataBody[elem.value[2*i + 1]].date?.toString(dateFormat: "HH:mm") ?? "invalid"
+                s.append("Sensor " + str + " not available: ")
+                s.append(("from \(d1) to  \(d2)\n"))
+            }
+        }
+
         print (s)
     }
 
