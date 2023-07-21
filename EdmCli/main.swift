@@ -69,7 +69,12 @@ struct EdmCli : ParsableCommand {
             
             let id = edmFileHeader.flightInfos[i].id
             //start = Date()
-            edmFileParser.parseFlightHeaderAndBody(for: id)
+            if edmFileHeader.flightInfos[i].sizeBytes > 0 {
+                edmFileParser.parseFlightHeaderAndBody(for: id)
+            } else {
+                print("main: flight id \(edmFileHeader.flightInfos[i].id) no data available")
+            }
+            
             /*
             let duration = Int(Date().timeIntervalSince(start) * 1000)
             print ("parse flight id \(id) took \(duration) milliseconds")
